@@ -62,8 +62,6 @@ var movieThis = function (term) {
     // Then run a request with axios to the OMDB API with the movie specified
     axios.get("http://www.omdbapi.com/?t=" + term + "&y=&plot=short&apikey=trilogy").then(
         function (response) {
-            console.log(response.data);
-
             console.log("\nThe movie's title is: " + response.data.Title);
             console.log("\nThe movie's came out in: " + response.data.Year);
             console.log("\nThe movie's IMDB rating is: " + response.data.imdbRating);
