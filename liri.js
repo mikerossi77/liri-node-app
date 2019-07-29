@@ -18,8 +18,10 @@ var spotify = new Spotify({
 var allArgs = process.argv;
 
 
-if (myCommand === 'spotify-this-song') {
-    var term = "The Sign";
+var spotifyThis = function (term) {
+    if (!term) {
+        var term = "The Sign";
+    }
 
     if (process.argv[3]) {
         term = "";
@@ -44,11 +46,13 @@ if (myCommand === 'spotify-this-song') {
             console.log(err);
         });
 }
-else if (myCommand === 'movie-this') {
+
+var movieThis = function (term) {
     // Include the axios npm package (Don't forget to run "npm install axios" in this folder first!)
     var axios = require("axios");
-    var term = "Mr. Nobody.";
-
+    if (!term) {
+        var term = "Mr. Nobody.";
+    }
     if (process.argv[3]) {
         term = "";
         for (i = 3; i < allArgs.length; i++) {
@@ -59,7 +63,7 @@ else if (myCommand === 'movie-this') {
     axios.get("http://www.omdbapi.com/?t=" + term + "&y=&plot=short&apikey=trilogy").then(
         function (response) {
             console.log(response.data);
-            
+
             console.log("\nThe movie's title is: " + response.data.Title);
             console.log("\nThe movie's came out in: " + response.data.Year);
             console.log("\nThe movie's IMDB rating is: " + response.data.imdbRating);
@@ -90,6 +94,36 @@ else if (myCommand === 'movie-this') {
             console.log(error.config);
         });
 }
+
+if (myCommand === 'do-what-it-says') {
+    var fs = require('fs');
+    fs.readFile('random.txt', 'utf8', (err, data) => {
+        if (err) throw err;
+        //console.log(data)
+        var splitData = data.split(',');
+        for (var i = 0; i < splitData.length; i++) {
+            console.log(splitData[i]);
+        }
+        myCommand = splitData[0];
+        //console.log("The command is " + myCommand);
+        term = splitData[1];
+        if (myCommand === 'spotify-this-song') {
+            spotifyThis(term);
+        }
+        else if (myCommand === 'movie-this') {
+            movieThis(term);
+        }
+    });
+}
+var term = process.argv[3];
+if (myCommand === 'spotify-this-song') {
+    spotifyThis(term);
+}
+else if (myCommand === 'movie-this') {
+    movieThis(term);
+}
+
+
 
 
 
